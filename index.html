@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine? 💕</title>
+  <!-- Google Fonts: cute & modern -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ----------------------------------
+       GLOBAL & RESET
+       ---------------------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --soft-pink: #ffb6c1;
+      --blush: #ffc0cb;
+      --pastel-red: #ff6b6b;
+      --deep-red: #e63946;
+      --white: #fffef9;
+      --shadow-soft: 0 8px 32px rgba(255, 105, 135, 0.2);
+      --shadow-hover: 0 12px 40px rgba(255, 105, 135, 0.35);
+      --radius: 24px;
+      --radius-sm: 16px;
+    }
+
+    body {
+      font-family: 'Quicksand', 'Nunito', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 50%, #ffd6e0 100%);
+      color: #4a2c2a;
+      position: relative;
+    }
+
+    /* ----------------------------------
+       FLOATING HEARTS BACKGROUND
+       ---------------------------------- */
+    .hearts-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-float {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.4;
+      animation: floatUp 8s ease-in-out infinite;
+    }
+
+    .heart-float:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .heart-float:nth-child(2) { left: 25%; animation-delay: 1.5s; }
+    .heart-float:nth-child(3) { left: 40%; animation-delay: 3s; }
+    .heart-float:nth-child(4) { left: 55%; animation-delay: 0.5s; }
+    .heart-float:nth-child(5) { left: 70%; animation-delay: 2s; }
+    .heart-float:nth-child(6) { left: 85%; animation-delay: 2.5s; }
+    .heart-float:nth-child(7) { left: 15%; animation-delay: 4s; }
+    .heart-float:nth-child(8) { left: 60%; animation-delay: 5s; }
+    .heart-float:nth-child(9) { left: 90%; animation-delay: 1s; }
+    .heart-float:nth-child(10) { left: 35%; animation-delay: 6s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.4; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100px) rotate(20deg); opacity: 0; }
+    }
+
+    /* ----------------------------------
+       PAGE CONTAINER (SPA - no reload)
+       ---------------------------------- */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page.active {
+      display: flex;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ----------------------------------
+       CARD LAYOUT (centered, rounded, shadow)
+       ---------------------------------- */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding: 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      animation: cardPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .card h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      color: var(--pastel-red);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .card .subtext {
+      font-size: 1rem;
+      color: #6b4a47;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    /* ----------------------------------
+       BUTTONS (hover + bounce)
+       ---------------------------------- */
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 1.8rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pastel-red), var(--deep-red));
+      color: white;
+      box-shadow: 0 4px 20px rgba(230, 57, 70, 0.4);
+    }
+
+    .btn-primary:hover {
+      animation: btnBounce 0.5s ease;
+    }
+
+    @keyframes btnBounce {
+      0%, 100% { transform: scale(1.05); }
+      50% { transform: scale(1.12); }
+    }
+
+    /* ----------------------------------
+       PAGE 1 – WELCOME
+       ---------------------------------- */
+    .welcome-emoji {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* ----------------------------------
+       PAGE 2 – QUIZ
+       ---------------------------------- */
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .quiz-option {
+      padding: 1rem 1.25rem;
+      background: linear-gradient(135deg, #fff5f7, #ffe8ec);
+      border: 2px solid var(--blush);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #4a2c2a;
+    }
+
+    .quiz-option:hover {
+      background: linear-gradient(135deg, #ffe8ec, #ffd6e0);
+      border-color: var(--pastel-red);
+      transform: scale(1.02);
+    }
+
+    .quiz-option.correct {
+      border-color: #2ecc71;
+      background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+      animation: correctPulse 0.6s ease;
+    }
+
+    .quiz-feedback {
+      margin-top: 1rem;
+      min-height: 2.5rem;
+    }
+
+    .quiz-feedback.wrong {
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-12px); }
+      40% { transform: translateX(12px); }
+      60% { transform: translateX(-8px); }
+      80% { transform: translateX(8px); }
+    }
+
+    .wrong-emoji {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .wrong-text {
+      color: var(--pastel-red);
+      font-weight: 600;
+    }
+
+    /* ----------------------------------
+       PAGE 3 – GIFT SELECTION
+       ---------------------------------- */
+    .gift-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .gift-card {
+      background: linear-gradient(145deg, #fff8fa, #ffecf0);
+      border: 2px solid var(--blush);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .gift-card:hover {
+      transform: scale(1.08);
+      box-shadow: var(--shadow-soft);
+      border-color: var(--pastel-red);
+    }
+
+    .gift-card .gift-emoji {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .gift-card .gift-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #4a2c2a;
+    }
+
+    .gift-message {
+      margin: 1.5rem 0;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, #ffe8ec, #ffd6e0);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      color: var(--deep-red);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .gift-message.revealed {
+      display: block;
+    }
+
+    .btn-final-reveal {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .btn-final-reveal.show {
+      display: inline-block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    /* ----------------------------------
+       PAGE 4 & 5 – YES/NO BUTTONS
+       ---------------------------------- */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, var(--pastel-red), var(--deep-red));
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-no {
+      background: linear-gradient(135deg, #6b9bd1, #4a7ab8);
+      color: white;
+      padding: 1rem 1.5rem;
+      position: relative;
+      transition: none; /* movement handled by JS */
+    }
+
+    .btn-no.runaway {
+      transition: left 0.3s ease, top 0.3s ease;
+    }
+
+    /* ----------------------------------
+       PAGE 5 – HEARTS EXPLOSION
+       ---------------------------------- */
+    .hearts-explosion {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+
+    .hearts-explosion.active {
+      display: block;
+    }
+
+    .hearts-explosion .heart-burst {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: burst 1.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes burst {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0);
+      }
+      20% {
+        opacity: 1;
+        transform: translate(var(--tx), var(--ty)) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(var(--tx) * 1.5), calc(var(--ty) * 1.5)) scale(1.2);
+      }
+    }
+
+    .final-message-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #ffd6e0, #ffb6c1);
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--deep-red);
+      display: none;
+      animation: fadeIn 0.6s ease, cardPop 0.6s ease;
+    }
+
+    .final-message-box.show {
+      display: block;
+    }
+
+    /* ----------------------------------
+       RESPONSIVE
+       ---------------------------------- */
+    @media (max-width: 500px) {
+      .card { padding: 1.5rem; }
+      .gift-grid { grid-template-columns: 1fr; }
+      .btn-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating hearts background -->
+  <div class="hearts-bg" aria-hidden="true">
+    <span class="heart-float">❤️</span>
+    <span class="heart-float">💕</span>
+    <span class="heart-float">💖</span>
+    <span class="heart-float">💗</span>
+    <span class="heart-float">❤️</span>
+    <span class="heart-float">💕</span>
+    <span class="heart-float">💖</span>
+    <span class="heart-float">💗</span>
+    <span class="heart-float">❤️</span>
+    <span class="heart-float">💕</span>
+  </div>
+
+  <!-- PAGE 1 – WELCOME -->
+  <section class="page active" id="page-welcome" data-page="1">
+    <div class="card">
+      <div class="welcome-emoji">🧸💍</div>
+      <h1>Will You Be My Valentine Baby 💍</h1>
+      <p class="subtext">Every second with you is a celebration. You make my world brighter 💖</p>
+      <button class="btn btn-primary" id="btn-start">Start the Surprise 💕</button>
+    </div>
+  </section>
+
+  <!-- PAGE 2 – QUIZ -->
+  <section class="page" id="page-quiz" data-page="2">
+    <div class="card">
+      <h1>Quiz for you 😌</h1>
+      <p class="subtext">Who is the absolute Boss in this relationship? 😏</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-answer="correct">Obviously You 💖</button>
+        <button class="quiz-option" data-answer="wrong">Me</button>
+        <button class="quiz-option" data-answer="wrong">My Mom 😭</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+    </div>
+  </section>
+
+  <!-- PAGE 3 – GIFT SELECTION -->
+  <section class="page" id="page-gifts" data-page="3">
+    <div class="card">
+      <h1>Something for You 🎁</h1>
+      <div class="gift-grid">
+        <div class="gift-card" data-gift="1">
+          <span class="gift-emoji">🧸</span>
+          <span class="gift-label">Gift 1</span>
+        </div>
+        <div class="gift-card" data-gift="2">
+          <span class="gift-emoji">💌</span>
+          <span class="gift-label">Gift 2</span>
+        </div>
+        <div class="gift-card" data-gift="3">
+          <span class="gift-emoji">💖</span>
+          <span class="gift-label">Gift 3</span>
+        </div>
+      </div>
+      <div class="gift-message" id="gift-message">No matter what you choose, you always get my heart ❤️</div>
+      <button class="btn btn-primary btn-final-reveal" id="btn-finally">Finally… 😳</button>
+    </div>
+  </section>
+
+  <!-- PAGE 4 – CONFIRMATION TRICK -->
+  <section class="page" id="page-confirm" data-page="4">
+    <div class="card">
+      <h1>Are you sure 😡?</h1>
+      <p class="subtext">Life is an incredible journey, and I want to spend every single second of it with you.</p>
+      <div class="btn-row">
+        <button class="btn btn-yes" id="btn-yes-4">YES</button>
+        <button class="btn btn-no" id="btn-no-4">NO</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5 – FINAL PROPOSAL -->
+  <section class="page" id="page-final" data-page="5">
+    <div class="card">
+      <h1>Will you be mine forever? 🥺❤️</h1>
+      <p class="subtext">I promise to love you, annoy you, support you, and choose you every single day.</p>
+      <div class="btn-row">
+        <button class="btn btn-yes" id="btn-yes-5">YES ❤️</button>
+        <button class="btn btn-no" id="btn-no-5">NO 😭</button>
+      </div>
+      <div class="final-message-box" id="final-message">YAYYYY 😭❤️ You are officially my Valentine. I Love You Forever 💕</div>
+    </div>
+  </section>
+
+  <!-- Hearts explosion overlay -->
+  <div class="hearts-explosion" id="hearts-explosion"></div>
+
+  <script>
+    // ----------------------------------
+    // SPA: Show only one page (no reload)
+    // ----------------------------------
+    const pages = document.querySelectorAll('.page');
+
+    function goToPage(pageNum) {
+      pages.forEach(function (p) {
+        p.classList.remove('active');
+        if (parseInt(p.dataset.page, 10) === pageNum) {
+          p.classList.add('active');
+        }
+      });
+    }
+
+    // PAGE 1 → Start
+    document.getElementById('btn-start').addEventListener('click', function () {
+      goToPage(2);
+    });
+
+    // PAGE 2 – Quiz
+    const quizOptions = document.querySelectorAll('.quiz-option');
+    const quizFeedback = document.getElementById('quiz-feedback');
+
+    quizOptions.forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        if (this.dataset.answer === 'correct') {
+          this.classList.add('correct');
+          quizFeedback.classList.remove('wrong');
+          quizFeedback.innerHTML = '';
+          setTimeout(function () {
+            goToPage(3);
+          }, 600);
+        } else {
+          quizFeedback.classList.add('wrong');
+          quizFeedback.innerHTML = '<span class="wrong-emoji">🐻</span><span class="wrong-text">Think again 😭</span>';
+        }
+      });
+    });
+
+    // PAGE 3 – Gifts
+    const giftCards = document.querySelectorAll('.gift-card');
+    const giftMessage = document.getElementById('gift-message');
+    const btnFinally = document.getElementById('btn-finally');
+
+    giftCards.forEach(function (card) {
+      card.addEventListener('click', function () {
+        giftMessage.classList.add('revealed');
+        btnFinally.classList.add('show');
+      });
+    });
+
+    btnFinally.addEventListener('click', function () {
+      goToPage(4);
+    });
+
+    // PAGE 4 – YES goes to 5, NO runs away
+    document.getElementById('btn-yes-4').addEventListener('click', function () {
+      goToPage(5);
+    });
+
+    makeRunaway(document.getElementById('btn-no-4'));
+
+    // PAGE 5 – YES = hearts + message, NO runs away
+    document.getElementById('btn-yes-5').addEventListener('click', function () {
+      triggerHeartsExplosion();
+      document.getElementById('final-message').classList.add('show');
+    });
+
+    makeRunaway(document.getElementById('btn-no-5'));
+
+    // NO button: move away randomly on hover
+    function makeRunaway(btn) {
+      if (!btn) return;
+      btn.classList.add('runaway');
+      btn.addEventListener('mouseenter', function () {
+        const maxX = window.innerWidth - btn.offsetWidth - 40;
+        const maxY = window.innerHeight - btn.offsetHeight - 40;
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        btn.style.position = 'fixed';
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+      });
+    }
+
+    // Hearts explosion on final YES
+    function triggerHeartsExplosion() {
+      const container = document.getElementById('hearts-explosion');
+      container.classList.add('active');
+      const hearts = ['❤️', '💕', '💖', '💗', '💘', '💝'];
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      for (let i = 0; i < 30; i++) {
+        const el = document.createElement('span');
+        el.className = 'heart-burst';
+        el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        const angle = (Math.PI * 2 * i) / 30 + Math.random();
+        const dist = 80 + Math.random() * 120;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist;
+        el.style.left = centerX + 'px';
+        el.style.top = centerY + 'px';
+        el.style.setProperty('--tx', tx + 'px');
+        el.style.setProperty('--ty', ty + 'px');
+        el.style.animationDelay = Math.random() * 0.3 + 's';
+        container.appendChild(el);
+      }
+
+      setTimeout(function () {
+        container.classList.remove('active');
+        container.innerHTML = '';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
